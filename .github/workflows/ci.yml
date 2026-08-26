@@ -1,0 +1,68 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  checks:
+    name: lint · typecheck · unit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm run lint
+
+      - run: npm run typecheck
+
+      - run: npm test
+
+  e2e:
+    name: e2e (CockroachDB)
+    runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: postgresql://root@localhost:26257/dev_card?sslmode=disable
+      IP_HASH_SALT: ci-only-salt
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      # Service containers cannot override the image command,
+      # and CockroachDB needs `start-single-node` — plain docker run instead.
+      - name: Start CockroachDB
+        run: |
+          docker run -d --name crdb -p 26257:26257 \
+            cockroachdb/cockroach:latest-v24.3 start-single-node --insecure
+          for i in $(seq 1 30); do
+            docker exec crdb ./cockroach sql --insecure -e 'SELECT 1' && break
+            sleep 1
+          done
+
+      - run: npx prisma migrate deploy
+
+      - run: npx prisma db seed
+
+      - run: npm run test:e2e
+
+  docker:
+    name: docker build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build production image
+        run: docker build -t dev-card:ci .
