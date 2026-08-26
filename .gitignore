@@ -1,0 +1,29 @@
+# dependencies
+node_modules/
+
+# build output
+dist/
+public/app.js
+public/app.js.map
+
+# environment
+.env
+.env.local
+.env.production
+
+# logs
+*.log
+npm-debug.log*
+
+# coverage
+coverage/
+
+# IDE / OS
+.idea/
+.vscode/*
+!.vscode/extensions.json
+.DS_Store
+Thumbs.db
+
+# local interview prep (never ship)
+prep/

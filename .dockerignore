@@ -1,0 +1,12 @@
+node_modules
+dist
+coverage
+.git
+.github
+.env
+.env.*
+*.md
+!README.md
+prep
+public/app.js
+public/app.js.map
