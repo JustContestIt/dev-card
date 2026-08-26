@@ -24,6 +24,13 @@ export default tseslint.config(
       '@typescript-eslint/require-await': 'off',
     },
   },
+  // Jest specifics: expect(mock.method) trips unbound-method on purpose
+  {
+    files: ['src/**/*.spec.ts', 'test/**/*.ts'],
+    rules: {
+      '@typescript-eslint/unbound-method': 'off',
+    },
+  },
   // Browser bundle: syntax-level rules only (own tsconfig, DOM libs)
   {
     files: ['web/**/*.ts'],

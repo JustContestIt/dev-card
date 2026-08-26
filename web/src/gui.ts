@@ -32,7 +32,7 @@ export function renderCard(root: HTMLElement, data: CardData, locale: Locale): v
   root.replaceChildren();
 
   root.append(
-    renderHero(data, s, locale),
+    renderHero(data, s),
     renderAbout(data, s),
     renderSkills(data, s, locale),
     renderExperience(data, s, locale),
@@ -42,7 +42,7 @@ export function renderCard(root: HTMLElement, data: CardData, locale: Locale): v
   );
 }
 
-function renderHero(data: CardData, s: Strings, locale: Locale): HTMLElement {
+function renderHero(data: CardData, s: Strings): HTMLElement {
   const p = data.profile;
   const hero = el('header', 'hero');
 
