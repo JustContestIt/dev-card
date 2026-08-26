@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Никита Берёза — TypeScript Backend Developer</title>
+  <meta name="description" content="Цифровая визитка: NestJS · GraphQL · Prisma · CockroachDB · Docker. С терминальным режимом." />
+  <meta property="og:title" content="Никита Берёза — TypeScript Backend Developer" />
+  <meta property="og:description" content="Цифровая визитка с собственным GraphQL API. Наберите help в терминале." />
+  <meta property="og:type" content="website" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Literata:wght@500;600&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <div class="wrap" id="gui">
+    <nav class="topbar">
+      <span class="path"><b>~/card</b> <span id="clock"></span></span>
+      <span class="actions">
+        <button class="tbtn" id="btn-lang" title="Language">EN</button>
+        <button class="tbtn" id="btn-theme" title="Theme">◐</button>
+        <a class="tbtn" id="btn-vcard" href="/vcard.vcf" download>vCard</a>
+        <a class="tbtn" id="btn-api" href="/graphql" target="_blank" rel="noopener">API</a>
+        <a class="tbtn" id="btn-src" href="https://github.com/JustContestIt/dev-card" target="_blank" rel="noopener">Код</a>
+        <button class="tbtn" id="btn-tty" title="Terminal mode">&gt;_ TTY</button>
+      </span>
+    </nav>
+
+    <div id="content">
+      <div class="boot" id="boot">query Card($locale: Locale!) { … } <span class="dim">— загрузка…</span></div>
+    </div>
+
+    <noscript>
+      <p style="font-family: monospace; padding: 24px 0;">
+        Эта визитка рендерится из собственного GraphQL API и требует JavaScript.<br />
+        Данные можно посмотреть напрямую: <a href="/graphql">/graphql</a> (Apollo Sandbox).
+      </p>
+    </noscript>
+  </div>
+
+  <div id="tty" role="dialog" aria-label="Terminal">
+    <div id="tty-out"></div>
+    <div class="tty-input-line">
+      <span class="tty-prompt" id="tty-prompt">guest@card:~$</span>
+      <input id="tty-in" autocomplete="off" spellcheck="false" aria-label="terminal input" />
+    </div>
+  </div>
+
+  <script src="/app.js"></script>
+</body>
+</html>
