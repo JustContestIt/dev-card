@@ -33,21 +33,22 @@ export class StatsService {
   }
 
   async getStats(): Promise<StatsModel> {
-    const [totalViews, uniqueVisitors, messagesReceived, endorsements] =
+    const [totalViews, uniqueRows, messagesReceived, endorsements] =
       await this.prisma.$transaction([
         this.prisma.pageView.count(),
-        this.prisma.pageView.findMany({
-          where: { ipHash: { not: null } },
-          distinct: ['ipHash'],
-          select: { ipHash: true },
-        }),
+        // Prisma's `distinct` materializes every distinct row in memory;
+        // COUNT(DISTINCT ...) stays inside the database.
+        this.prisma.$queryRaw<{ count: bigint }[]>`
+          SELECT count(DISTINCT "ipHash") AS count
+          FROM "PageView"
+          WHERE "ipHash" IS NOT NULL`,
         this.prisma.contactMessage.count(),
         this.prisma.skill.aggregate({ _sum: { endorsements: true } }),
       ]);
 
     return {
       totalViews,
-      uniqueVisitors: uniqueVisitors.length,
+      uniqueVisitors: Number(uniqueRows[0]?.count ?? 0),
       messagesReceived,
       totalEndorsements: endorsements._sum.endorsements ?? 0,
       uptimeSeconds: Math.round(process.uptime()),

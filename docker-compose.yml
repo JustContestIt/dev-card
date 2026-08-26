@@ -4,9 +4,11 @@ services:
   db:
     image: cockroachdb/cockroach:latest-v24.3
     command: start-single-node --insecure --accept-sql-without-tls
+    # Loopback only: an --insecure node must never be reachable from outside.
+    # The app container talks to db over the internal compose network.
     ports:
-      - '26257:26257' # SQL
-      - '8081:8080' # CockroachDB admin UI
+      - '127.0.0.1:26257:26257' # SQL (local prisma migrate/studio)
+      - '127.0.0.1:8081:8080' # CockroachDB admin UI
     volumes:
       - crdb-data:/cockroach/cockroach-data
     healthcheck:
@@ -29,6 +31,9 @@ services:
       IP_HASH_SALT: ${IP_HASH_SALT:-compose-demo-salt}
       CONTACT_RATE_LIMIT: ${CONTACT_RATE_LIMIT:-3}
       LOG_LEVEL: ${LOG_LEVEL:-info}
+      # No reverse proxy in front of this compose setup — do not trust
+      # X-Forwarded-For (spoofable). Set to 1+ when behind nginx/Caddy.
+      TRUST_PROXY: ${TRUST_PROXY:-0}
     ports:
       - '3000:3000'
     depends_on:

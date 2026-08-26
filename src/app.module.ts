@@ -88,15 +88,20 @@ import { StatsModule } from './stats/stats.module';
             const orig = ext.originalError as
               | { statusCode?: number; message?: string | string[] }
               | undefined;
+            const status = (ext.status as number | undefined) ?? orig?.statusCode;
 
             // Nest HttpExceptions arrive as INTERNAL_SERVER_ERROR — restore real codes.
-            if (orig?.statusCode === 404) ext.code = 'NOT_FOUND';
-            else if (orig?.statusCode === 400) ext.code = 'BAD_REQUEST';
+            if (status === 404) ext.code = 'NOT_FOUND';
+            else if (status === 400) ext.code = 'BAD_REQUEST';
+            else if (status === 429) ext.code = 'RATE_LIMITED';
 
             // "Bad Request Exception" is useless — surface the validation details.
             let message = formatted.message;
             if (Array.isArray(orig?.message)) {
               message = orig.message.join('; ');
+            } else if (status === 429) {
+              // ThrottlerException's default text leaks the class name.
+              message = 'Too many requests, please slow down.';
             }
 
             if (isProd) {

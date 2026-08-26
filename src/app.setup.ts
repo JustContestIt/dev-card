@@ -14,8 +14,10 @@ export function configureApp(app: NestExpressApplication): void {
   const config = app.get(ConfigService<Env, true>);
   const corsOrigins = config.get('CORS_ORIGINS', { infer: true });
 
-  // Real client IPs behind a reverse proxy / load balancer (Render, Railway, nginx).
-  app.set('trust proxy', 1);
+  // Real client IPs behind a reverse proxy / load balancer (Render, Railway,
+  // nginx). Configurable: trusting X-Forwarded-For with no proxy in front
+  // would let clients spoof their IP and dodge rate limits.
+  app.set('trust proxy', config.get('TRUST_PROXY', { infer: true }));
 
   // Strict CSP for the card itself; /graphql is exempt because the embedded
   // Apollo Sandbox loads its explorer bundle from Apollo's CDN.

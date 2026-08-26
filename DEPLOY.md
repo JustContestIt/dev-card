@@ -54,4 +54,5 @@ health-чеками. Дальше — любой reverse proxy (Caddy/nginx) н�
 | `IP_HASH_SALT` | да (prod) | случайная строка ≥ 8 символов |
 | `CORS_ORIGINS` | нет | `*` или список через запятую |
 | `CONTACT_RATE_LIMIT` | нет | сообщений в час с одного IP (по умолчанию 3) |
+| `TRUST_PROXY` | нет | сколько прокси-хопов доверять для `X-Forwarded-For`: `1` за Render/nginx (по умолчанию), `0` при прямом доступе |
 | `LOG_LEVEL` | нет | `info` (по умолчанию) |

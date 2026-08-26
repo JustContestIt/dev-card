@@ -50,12 +50,21 @@ function setLocale(l: Locale): void {
   void load();
 }
 
+let loadSeq = 0;
+
 async function load(): Promise<void> {
+  // Guard against fast locale toggling: only the latest request may render,
+  // otherwise a slow earlier response would overwrite the newer content.
+  const seq = ++loadSeq;
+  const requested = locale;
   try {
-    data = await fetchCard(locale);
-    renderCard(content, data, locale);
+    const fetched = await fetchCard(requested);
+    if (seq !== loadSeq) return;
+    data = fetched;
+    renderCard(content, data, requested);
   } catch {
-    renderLoadError(content, locale);
+    if (seq !== loadSeq) return;
+    renderLoadError(content, requested);
   }
 }
 

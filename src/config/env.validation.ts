@@ -13,6 +13,12 @@ const envSchema = z.object({
   DATABASE_URL: z.string().min(1, 'DATABASE_URL is required'),
   IP_HASH_SALT: z.string().min(8, 'use at least 8 characters').default('dev-only-salt'),
   CONTACT_RATE_LIMIT: z.coerce.number().int().positive().default(3),
+  /**
+   * Number of reverse-proxy hops to trust for X-Forwarded-For.
+   * 1 for Render/Railway/nginx; 0 when clients hit the app directly —
+   * otherwise anyone can spoof their IP (and dodge rate limits) with a header.
+   */
+  TRUST_PROXY: z.coerce.number().int().min(0).default(1),
   LOG_LEVEL: z.enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace']).default('info'),
 });
 

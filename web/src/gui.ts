@@ -17,9 +17,12 @@ function el<K extends keyof HTMLElementTagNameMap>(
 
 function fmtDate(iso: string, locale: Locale): string {
   const d = new Date(iso);
+  // Dates come as UTC midnight — format in UTC, otherwise
+  // negative-offset timezones show the previous month.
   return d.toLocaleDateString(locale === 'RU' ? 'ru-RU' : 'en-US', {
     month: 'short',
     year: 'numeric',
+    timeZone: 'UTC',
   });
 }
 
