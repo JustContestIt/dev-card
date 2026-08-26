@@ -15,6 +15,7 @@ import { LoggerModule } from 'nestjs-pino';
 import { CommonModule } from './common/common.module';
 import { GqlThrottlerGuard } from './common/gql-throttler.guard';
 import { Env, validateEnv } from './config/env.validation';
+import { ContentModule } from './content/content.module';
 import { ContactModule } from './contact/contact.module';
 import { ExperienceModule } from './experience/experience.module';
 import { HealthModule } from './health/health.module';
@@ -71,7 +72,10 @@ import { StatsModule } from './stats/stats.module';
           // Apollo Sandbox stays available in production on purpose:
           // the API explorer is part of the "digital business card" demo.
           plugins: [ApolloServerPluginLandingPageLocalDefault({ embed: true })],
-          // Cheap DoS insurance: deeply nested queries are rejected before execution.
+          // Cheap DoS insurance: deeply nested queries are rejected before
+          // execution. Today's schema has no recursive relations, so this is
+          // a guard for future ones. Introspection (__-fields) is exempt by
+          // design — Apollo Sandbox needs deep introspection queries to work.
           validationRules: [depthLimit(8)],
           context: ({ req, res }: { req: Request; res: Response }) => ({
             req,
@@ -113,6 +117,7 @@ import { StatsModule } from './stats/stats.module';
       exclude: ['/graphql'],
     }),
 
+    ContentModule,
     HealthModule,
     ProfileModule,
     SkillsModule,
