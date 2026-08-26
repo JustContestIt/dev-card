@@ -1,0 +1,40 @@
+name: dev-card
+
+services:
+  db:
+    image: cockroachdb/cockroach:latest-v24.3
+    command: start-single-node --insecure --accept-sql-without-tls
+    ports:
+      - '26257:26257' # SQL
+      - '8081:8080' # CockroachDB admin UI
+    volumes:
+      - crdb-data:/cockroach/cockroach-data
+    healthcheck:
+      test: ['CMD', '/cockroach/cockroach', 'sql', '--insecure', '-e', 'SELECT 1']
+      interval: 3s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      PUBLIC_URL: ${PUBLIC_URL:-http://localhost:3000}
+      CORS_ORIGINS: ${CORS_ORIGINS:-*}
+      DATABASE_URL: postgresql://root@db:26257/dev_card?sslmode=disable
+      IP_HASH_SALT: ${IP_HASH_SALT:-compose-demo-salt}
+      CONTACT_RATE_LIMIT: ${CONTACT_RATE_LIMIT:-3}
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+    ports:
+      - '3000:3000'
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  crdb-data:

@@ -1,0 +1,105 @@
+// Prisma schema for the digital business card.
+// Provider is CockroachDB — the same database the target project runs on.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "cockroachdb"
+  url      = env("DATABASE_URL")
+}
+
+enum Locale {
+  RU
+  EN
+}
+
+enum SkillCategory {
+  LANGUAGE
+  BACKEND
+  DATABASE
+  DEVOPS
+  TOOLING
+}
+
+/// One row per locale — the card is fully bilingual.
+model Profile {
+  id        String   @id @default(uuid())
+  locale    Locale   @unique
+  fullName  String
+  title     String
+  summary   String
+  location  String
+  email     String
+  github    String
+  telegram  String
+  websiteUrl String?
+  openToWork Boolean @default(true)
+  updatedAt DateTime @updatedAt
+}
+
+/// Locale-independent: skill names are shared, levels are facts.
+model Skill {
+  id           String        @id @default(uuid())
+  name         String        @unique
+  category     SkillCategory
+  /// 1..5 self-assessment, rendered as a bar on the card
+  level        Int
+  yearsUsed    Float
+  featured     Boolean       @default(false)
+  endorsements Int           @default(0)
+  sortOrder    Int           @default(0)
+}
+
+model Experience {
+  id          String    @id @default(uuid())
+  locale      Locale
+  company     String
+  role        String
+  description String
+  startDate   DateTime
+  endDate     DateTime?
+  stack       String[]
+  sortOrder   Int       @default(0)
+
+  @@index([locale, sortOrder])
+}
+
+model Project {
+  id          String  @id @default(uuid())
+  slug        String
+  locale      Locale
+  name        String
+  description String
+  /// Names may match Skill.name — resolved to Skill entities via DataLoader
+  stack       String[]
+  repoUrl     String?
+  liveUrl     String?
+  highlight   Boolean @default(false)
+  sortOrder   Int     @default(0)
+
+  @@unique([slug, locale])
+  @@index([locale, sortOrder])
+}
+
+model ContactMessage {
+  id        String   @id @default(uuid())
+  name      String
+  email     String
+  message   String
+  /// Salted hash — raw visitor IPs are never persisted
+  ipHash    String?
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+}
+
+model PageView {
+  id        String   @id @default(uuid())
+  path      String
+  ipHash    String?
+  createdAt DateTime @default(now())
+
+  @@index([path, createdAt])
+}
