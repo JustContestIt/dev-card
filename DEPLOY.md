@@ -12,8 +12,8 @@
    **Basic (Serverless), Free**. В разделе Connect выбери «Connection string»,
    создай SQL-пользователя и скопируй строку вида
    `postgresql://user:pass@host:26257/defaultdb?sslmode=verify-full`.
-   Замени `defaultdb` на `dev_card` (база создастся при первой миграции —
-   либо создай заранее: `CREATE DATABASE dev_card;` в их SQL-консоли).
+   Замени `defaultdb` на `dev_card` — создавать базу руками не нужно,
+   `prisma migrate deploy` создаст её при первом старте контейнера.
 2. **Приложение.** [render.com](https://render.com) → New → **Blueprint** →
    указать этот Git-репозиторий. Render прочитает `render.yaml`.
 3. В настройках сервиса заполни переменные:
