@@ -1,7 +1,7 @@
 /**
  * ЕДИНСТВЕННЫЙ источник личного контента визитки.
- * Отредактируй этот файл под себя и выполни `npm run prisma:seed`.
- * Поля, помеченные TODO, обязательно замени на реальные данные.
+ * Данные синхронизированы с резюме (public/cv/*.pdf).
+ * После правок выполни `npm run prisma:seed`.
  */
 
 export const profiles = [
@@ -10,14 +10,15 @@ export const profiles = [
     fullName: 'Никита Берёза',
     title: 'TypeScript Backend-разработчик',
     summary:
-      'Разрабатываю надёжные backend-сервисы на TypeScript: NestJS, GraphQL, Prisma, ' +
-      'PostgreSQL/CockroachDB, Docker. Пишу код, который легко читать, тестировать и ' +
-      'сопровождать: строгая типизация, миграции, health-чеки, rate limiting и CI из коробки. ' +
-      'Использую Claude Code как инструмент ускорения — с обязательным ревью и тестами, без вайб-кодинга.',
-    location: 'Remote', // TODO: город/страна, например «Алматы, Казахстан»
+      'Backend-разработчик с 3+ годами опыта: Node.js/NestJS, проектирование API, ' +
+      'платежи и подписки, Kafka и уведомления в реальном времени. Пишу код, который ' +
+      'легко читать, тестировать и сопровождать: строгая типизация, миграции, health-чеки, ' +
+      'rate limiting и CI из коробки. Использую Claude Code как инструмент ускорения — ' +
+      'с обязательным ревью и тестами, без вайб-кодинга.',
+    location: 'Санкт-Петербург · remote',
     email: 'nikita.beryoza@gmail.com',
     github: 'https://github.com/JustContestIt',
-    telegram: 'https://t.me/your_telegram', // TODO: реальный Telegram
+    telegram: 'https://t.me/nberyoza',
     websiteUrl: null,
     openToWork: true,
   },
@@ -26,14 +27,15 @@ export const profiles = [
     fullName: 'Nikita Beryoza',
     title: 'TypeScript Backend Developer',
     summary:
-      'I build reliable TypeScript backends: NestJS, GraphQL, Prisma, PostgreSQL/CockroachDB, ' +
-      'Docker. I ship code that is easy to read, test and maintain — strict typing, migrations, ' +
-      'health checks, rate limiting and CI included. I use Claude Code as an accelerator — ' +
+      'Backend developer with 3+ years of experience: Node.js/NestJS, API design, ' +
+      'payments and subscriptions, Kafka and real-time notifications. I ship code that is ' +
+      'easy to read, test and maintain — strict typing, migrations, health checks, ' +
+      'rate limiting and CI included. I use Claude Code as an accelerator — ' +
       'always with review and tests, never vibe-coding.',
-    location: 'Remote', // TODO
+    location: 'Saint Petersburg · remote',
     email: 'nikita.beryoza@gmail.com',
     github: 'https://github.com/JustContestIt',
-    telegram: 'https://t.me/your_telegram', // TODO
+    telegram: 'https://t.me/nberyoza',
     websiteUrl: null,
     openToWork: true,
   },
@@ -52,51 +54,98 @@ export const skills = [
   { name: 'Git', category: 'TOOLING' as const, level: 5, yearsUsed: 5, featured: false, sortOrder: 9 },
   { name: 'GitHub Actions', category: 'DEVOPS' as const, level: 4, yearsUsed: 2, featured: false, sortOrder: 10 },
   { name: 'REST API', category: 'BACKEND' as const, level: 5, yearsUsed: 4, featured: false, sortOrder: 11 },
-  { name: 'Jest', category: 'TOOLING' as const, level: 4, yearsUsed: 3, featured: false, sortOrder: 12 },
-  { name: 'S3 Storage', category: 'DEVOPS' as const, level: 3, yearsUsed: 2, featured: false, sortOrder: 13 },
-  { name: 'Claude Code', category: 'TOOLING' as const, level: 4, yearsUsed: 1, featured: true, sortOrder: 14 },
+  { name: 'Kafka', category: 'BACKEND' as const, level: 3, yearsUsed: 1, featured: false, sortOrder: 12 },
+  { name: 'Jest', category: 'TOOLING' as const, level: 4, yearsUsed: 3, featured: false, sortOrder: 13 },
+  { name: 'S3 Storage', category: 'DEVOPS' as const, level: 3, yearsUsed: 2, featured: false, sortOrder: 14 },
+  { name: 'Claude Code', category: 'TOOLING' as const, level: 4, yearsUsed: 1, featured: true, sortOrder: 15 },
 ];
 
-// TODO: замени опыт на реальные места работы
 export const experience = [
   {
     slugOrder: 1,
-    startDate: new Date('2023-01-01'),
-    endDate: null,
-    stack: ['TypeScript', 'NestJS', 'PostgreSQL', 'Prisma', 'Docker'],
+    startDate: new Date('2025-04-01'),
+    endDate: new Date('2025-10-31'),
+    stack: ['TypeScript', 'NestJS', 'TypeORM', 'Next.js', 'Jest'],
     ru: {
-      company: 'Коммерческая разработка', // TODO
-      role: 'Backend-разработчик',
+      company: 'Pandaverse OÜ',
+      role: 'Full-stack разработчик',
       description:
-        'Проектирование и разработка backend-сервисов: REST/GraphQL API, схемы данных и миграции, ' +
-        'интеграции с внешними сервисами, контейнеризация и CI/CD. Код-ревью и написание тестов.',
+        'Онлайн-планировщик на 1000+ пользователей: серверная часть на NestJS + TypeORM ' +
+        'с современными архитектурными паттернами, интерфейс на Next.js. Оптимизировал ' +
+        'производительность приложения на 70%, отрефакторил кодовую базу и довёл покрытие ' +
+        'тестами на Jest до 80%.',
     },
     en: {
-      company: 'Commercial development', // TODO
-      role: 'Backend Developer',
+      company: 'Pandaverse OÜ',
+      role: 'Full-stack Developer',
       description:
-        'Design and development of backend services: REST/GraphQL APIs, data schemas and migrations, ' +
-        'third-party integrations, containerization and CI/CD. Code review and testing.',
+        'Online scheduler serving 1000+ users: backend on NestJS + TypeORM with modern ' +
+        'architectural patterns, UI on Next.js. Optimized application performance by 70%, ' +
+        'refactored the codebase and brought Jest test coverage to 80%.',
     },
   },
   {
     slugOrder: 2,
-    startDate: new Date('2021-06-01'),
-    endDate: new Date('2022-12-31'),
-    stack: ['JavaScript', 'Node.js', 'Express', 'MongoDB'],
+    startDate: new Date('2024-05-01'),
+    endDate: new Date('2025-03-31'),
+    stack: ['TypeScript', 'NestJS', 'Kafka', 'Docker'],
     ru: {
-      company: 'Фриланс-проекты', // TODO
-      role: 'Fullstack-разработчик',
+      company: 'Dipal',
+      role: 'Backend-разработчик',
       description:
-        'Разработка веб-приложений под ключ: от постановки задачи до деплоя. ' +
-        'Работа напрямую с заказчиками, оценка сроков, поддержка после релиза.',
+        'Сервис подписок и платежей на NestJS, обрабатывающий ~1000 транзакций в день. ' +
+        'Кросс-платформенные push-уведомления (iOS/Android), обработка событий из Kafka, ' +
+        'управление локальными серверами; руководил миграцией инфраструктуры брокера ' +
+        'сообщений и пакетного менеджера.',
     },
     en: {
-      company: 'Freelance projects', // TODO
-      role: 'Fullstack Developer',
+      company: 'Dipal',
+      role: 'Backend Developer',
       description:
-        'End-to-end web application development: from requirements to deployment. ' +
-        'Worked directly with clients, estimated timelines, provided post-release support.',
+        'Subscriptions and payments service on NestJS handling ~1000 transactions per day. ' +
+        'Cross-platform push notifications (iOS/Android), Kafka event processing, local ' +
+        'server management; led the migration of the message broker and package manager ' +
+        'infrastructure.',
+    },
+  },
+  {
+    slugOrder: 3,
+    startDate: new Date('2023-04-01'),
+    endDate: new Date('2023-09-30'),
+    stack: ['Flutter', 'Dart', 'JWT'],
+    ru: {
+      company: 'Стартап «Мой доктор»',
+      role: 'Flutter-разработчик',
+      description:
+        'Модуль авторизации с нуля: вход, регистрация, JWT-аутентификация. ' +
+        'Личный кабинет пользователя, дизайн и архитектура приложения.',
+    },
+    en: {
+      company: 'Startup “My Doctor”',
+      role: 'Flutter Developer',
+      description:
+        'Authentication module from scratch: login, registration, JWT-based auth. ' +
+        'User account area, application design and architecture.',
+    },
+  },
+  {
+    slugOrder: 4,
+    startDate: new Date('2022-06-01'),
+    endDate: new Date('2023-01-31'),
+    stack: ['Node.js', 'React', 'Figma'],
+    ru: {
+      company: 'M&C Training Center',
+      role: 'Full-stack разработчик',
+      description:
+        'Проектирование интерфейсов в Figma, оптимизация базы данных и backend-сервера ' +
+        'на Node.js, внедрение и обновление UI на React.',
+    },
+    en: {
+      company: 'M&C Training Center',
+      role: 'Full-stack Developer',
+      description:
+        'UI design in Figma, database and Node.js backend optimization, ' +
+        'React UI implementation and updates.',
     },
   },
 ];
@@ -124,21 +173,25 @@ export const projects = [
         'migrations, e2e tests, CI and a multi-stage Docker build.',
     },
   },
-  // TODO: добавь 1-2 реальных проекта по этому образцу
   {
-    slug: 'api-service',
-    stack: ['TypeScript', 'NestJS', 'PostgreSQL', 'Prisma', 'Docker'],
+    slug: 'course-platform',
+    stack: ['TypeScript', 'React', 'Next.js', 'MongoDB'],
     repoUrl: null,
     liveUrl: null,
     highlight: false,
     sortOrder: 2,
     ru: {
-      name: 'Сервис API (пример)',
-      description: 'Замени этот блок описанием реального проекта: что делал, какой стек, какой результат.',
+      name: 'Платформа онлайн-курсов',
+      description:
+        'Дипломный проект ИТМО: платформа, где пользователи записываются на онлайн-курсы ' +
+        'и проходят их. Управление курсами, личный кабинет, взаимодействие студентов ' +
+        'и авторов курсов.',
     },
     en: {
-      name: 'API service (placeholder)',
-      description: 'Replace this block with a real project: what you built, the stack, the outcome.',
+      name: 'Online course platform',
+      description:
+        'ITMO thesis project: a platform where users enroll in and take online courses. ' +
+        'Course management, user accounts, student and author interaction.',
     },
   },
 ];

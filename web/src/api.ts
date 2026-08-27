@@ -2,6 +2,11 @@
 
 export type Locale = 'RU' | 'EN';
 
+/** Resume PDFs live in public/cv/ — one per locale. */
+export function cvPath(locale: Locale): string {
+  return `/cv/CV_Beryoza_${locale === 'RU' ? 'ru' : 'en'}.pdf`;
+}
+
 export interface Profile {
   fullName: string;
   title: string;

@@ -1,4 +1,4 @@
-import { CardData, Locale, fetchCard, trackView } from './api';
+import { CardData, Locale, cvPath, fetchCard, trackView } from './api';
 import { renderCard, renderLoadError } from './gui';
 import { Tty } from './tty';
 
@@ -30,6 +30,7 @@ const content = document.getElementById('content') as HTMLElement;
 const btnLang = document.getElementById('btn-lang') as HTMLButtonElement;
 const btnTheme = document.getElementById('btn-theme') as HTMLButtonElement;
 const btnTty = document.getElementById('btn-tty') as HTMLButtonElement;
+const btnCv = document.getElementById('btn-cv') as HTMLAnchorElement;
 const clock = document.getElementById('clock') as HTMLElement;
 
 function applyTheme(): void {
@@ -46,6 +47,7 @@ function setLocale(l: Locale): void {
   locale = l;
   safeSet('locale', l);
   btnLang.textContent = l === 'RU' ? 'EN' : 'RU';
+  btnCv.href = cvPath(l);
   document.documentElement.lang = l.toLowerCase();
   void load();
 }
@@ -97,6 +99,7 @@ function tick(): void {
 
 applyTheme();
 btnLang.textContent = locale === 'RU' ? 'EN' : 'RU';
+btnCv.href = cvPath(locale);
 tick();
 setInterval(tick, 1000);
 void load();

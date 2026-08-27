@@ -1,4 +1,4 @@
-import { CARD_QUERY, CardData, Locale, gql } from './api';
+import { CARD_QUERY, CardData, Locale, cvPath, gql } from './api';
 import { STRINGS } from './i18n';
 
 const BANNER = String.raw`
@@ -115,6 +115,7 @@ export class Tty {
             '  lang ru|en — язык контента',
             '  theme      — светлая/тёмная тема',
             '  vcard      — скачать контакт (.vcf)',
+            '  cv         — открыть резюме (PDF, язык текущей локали)',
             '  source     — исходный код на GitHub',
             '  gui        — вернуться в обычный режим (Esc)',
             '  clear      — очистить экран',
@@ -220,6 +221,11 @@ export class Tty {
       case 'vcard':
         window.location.href = '/vcard.vcf';
         this.print('↓ vcard.vcf');
+        break;
+
+      case 'cv':
+        window.open(cvPath(loc), '_blank', 'noopener');
+        this.print(`→ ${cvPath(loc)}`);
         break;
 
       case 'source':
