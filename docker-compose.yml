@@ -2,7 +2,10 @@ name: dev-card
 
 services:
   db:
-    image: cockroachdb/cockroach:latest-v24.3
+    # Pinned to the same major version CockroachDB Cloud runs: v26.2 creates
+    # tables with `schema_locked = true`, which changes what migrations are
+    # legal. Developing against an older version hides those failures.
+    image: cockroachdb/cockroach:latest-v26.2
     command: start-single-node --insecure --accept-sql-without-tls
     # Loopback only: an --insecure node must never be reachable from outside.
     # The app container talks to db over the internal compose network.

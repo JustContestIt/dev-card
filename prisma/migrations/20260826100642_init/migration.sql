@@ -1,3 +1,10 @@
+-- Indexes are declared inline instead of as separate CREATE INDEX statements.
+-- CockroachDB v25.2+ creates tables with `schema_locked = true` by default, and
+-- a locked table cannot be altered from inside the explicit transaction Prisma
+-- wraps a migration in ("cannot automatically unlock the table", SQLSTATE 57000).
+-- Declaring the indexes as part of CREATE TABLE means there is no post-create
+-- schema change at all, so the migration works on both older and newer clusters.
+
 -- CreateEnum
 CREATE TYPE "Locale" AS ENUM ('RU', 'EN');
 
@@ -19,7 +26,8 @@ CREATE TABLE "Profile" (
     "openToWork" BOOL NOT NULL DEFAULT true,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "Profile_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "Profile_pkey" PRIMARY KEY ("id"),
+    UNIQUE INDEX "Profile_locale_key" ("locale")
 );
 
 -- CreateTable
@@ -33,7 +41,8 @@ CREATE TABLE "Skill" (
     "endorsements" INT4 NOT NULL DEFAULT 0,
     "sortOrder" INT4 NOT NULL DEFAULT 0,
 
-    CONSTRAINT "Skill_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "Skill_pkey" PRIMARY KEY ("id"),
+    UNIQUE INDEX "Skill_name_key" ("name")
 );
 
 -- CreateTable
@@ -48,7 +57,8 @@ CREATE TABLE "Experience" (
     "stack" STRING[],
     "sortOrder" INT4 NOT NULL DEFAULT 0,
 
-    CONSTRAINT "Experience_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "Experience_pkey" PRIMARY KEY ("id"),
+    INDEX "Experience_locale_sortOrder_idx" ("locale", "sortOrder")
 );
 
 -- CreateTable
@@ -64,7 +74,9 @@ CREATE TABLE "Project" (
     "highlight" BOOL NOT NULL DEFAULT false,
     "sortOrder" INT4 NOT NULL DEFAULT 0,
 
-    CONSTRAINT "Project_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "Project_pkey" PRIMARY KEY ("id"),
+    INDEX "Project_locale_sortOrder_idx" ("locale", "sortOrder"),
+    UNIQUE INDEX "Project_slug_locale_key" ("slug", "locale")
 );
 
 -- CreateTable
@@ -76,7 +88,8 @@ CREATE TABLE "ContactMessage" (
     "ipHash" STRING,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    CONSTRAINT "ContactMessage_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "ContactMessage_pkey" PRIMARY KEY ("id"),
+    INDEX "ContactMessage_createdAt_idx" ("createdAt")
 );
 
 -- CreateTable
@@ -86,26 +99,6 @@ CREATE TABLE "PageView" (
     "ipHash" STRING,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    CONSTRAINT "PageView_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "PageView_pkey" PRIMARY KEY ("id"),
+    INDEX "PageView_path_createdAt_idx" ("path", "createdAt")
 );
-
--- CreateIndex
-CREATE UNIQUE INDEX "Profile_locale_key" ON "Profile"("locale");
-
--- CreateIndex
-CREATE UNIQUE INDEX "Skill_name_key" ON "Skill"("name");
-
--- CreateIndex
-CREATE INDEX "Experience_locale_sortOrder_idx" ON "Experience"("locale", "sortOrder");
-
--- CreateIndex
-CREATE INDEX "Project_locale_sortOrder_idx" ON "Project"("locale", "sortOrder");
-
--- CreateIndex
-CREATE UNIQUE INDEX "Project_slug_locale_key" ON "Project"("slug", "locale");
-
--- CreateIndex
-CREATE INDEX "ContactMessage_createdAt_idx" ON "ContactMessage"("createdAt");
-
--- CreateIndex
-CREATE INDEX "PageView_path_createdAt_idx" ON "PageView"("path", "createdAt");
